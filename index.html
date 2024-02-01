@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - Twitchtv JSON API</title>
+  
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<html lang="en" ng-app="twitchTvApp">
+<head>
+	<meta charset="UTF-8">
+	<title>Twitch TV JSON API</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<link href='https://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Play' rel='stylesheet' type='text/css'>
+	<style type="text/css">
+		
+		* {
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			background: #E8E8E8;
+			font-family: 'Play', sans-serif;
+		}
+    
+		img {
+			float: left;
+			width: 90px;
+		}
+    
+    #logo {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    }
+    
+    #logo small {
+      font-size: 16px;
+      display: inline;
+      margin-left: 20px;
+    }
+
+		.twitch_logo {
+			width: 150px;
+float: inherit;
+		}
+		
+		h1 {
+text-align: center;
+margin-top: 30px;
+font-size: 25px;
+			color: #6441A5;
+			font-family: 'Courgette', cursive;
+    font-weight: bold;
+		}
+		
+		.user.online {
+			background-image: url("http://icons.iconarchive.com/icons/franksouza183/fs/128/Status-tray-online-icon.png");
+			background-repeat: no-repeat;
+			background-position: bottom right;
+			background-size: 50px 50px;
+		}
+
+		ul {
+			overflow: hidden;
+			margin-bottom: 0px;
+    width: 90%;
+		}
+
+		li {
+			background-size: 50px 50px;
+			float: left;
+			width: 48%;
+			overflow: hidden;
+			list-style: none;
+			background-color: #1D1D1D;
+			border-right: 50px solid #2D2D2D;
+			text-align: center;
+			height: 90px;
+			line-height: 40px;
+			position: relative;
+			margin: 10px;
+			border-top-left-radius: 40px;
+			border-bottom-left-radius: 40px;
+		}
+
+		li:nth-child(even) {
+			border-top-left-radius: 0px;
+			border-bottom-left-radius: 0px;
+			border-top-right-radius: 40px;
+			border-bottom-right-radius: 40px;
+			border-left: 50px solid;
+			border-right: 0px;
+		}
+
+		li:nth-child(even) img {
+			float: right;
+		}
+
+		li:hover {
+			transform: rotate3d(50,0,0,10deg) skew(4deg,0deg);
+			transition: all .3s;
+			background: #292929;
+		}
+
+		p {
+			margin-left: 20px;
+			font-size: 18px;
+			display: inline;
+		}
+
+		small {
+			display: block;
+			font-weight: normal;
+		}
+
+		a {
+			float: left;
+			color: white;
+			font-weight: bold;
+			display: block;
+			width: 100%;
+		}
+
+		a:hover {
+			color: white;
+			text-decoration: none;
+		}
+
+		li.online {
+			background-color: white;
+			border-right: 50px solid #6441A5;
+		}
+
+		li:nth-child(even).online {
+			border-right: 0px;
+			border-left: 50px solid #6441A5;
+		}
+
+		li.online:hover {
+			background-color: #F5F5F5;
+		}
+
+		li.online a {
+			color: #1D1D1D;
+		}
+
+		p.offline  {
+			line-height: 90px;
+		}
+
+		#userSearchForm {
+			width: 50%;
+			margin: 0 auto;
+			margin-top: 30px;
+			margin-bottom: 30px;
+		}
+
+		#userSearchForm .input-group-addon {
+			background-color: white;
+			font-size: 20px;
+			border: 0px;
+		}
+
+		#userSearchForm input {
+			font-size: 20px;
+			text-align: center;
+			border: 0px;
+			box-shadow: none;
+      height: 50px;
+		}
+
+		.ng-enter {
+			left: 9999px;
+			transition: all .2s;
+		}
+
+		.ng-enter-stagger {
+			transition-delay: .03s;
+		}
+
+
+		.ng-enter-active {
+			left: 0px;
+			transition: all .2s;
+		}
+
+
+		.ng-leave {
+			left: 0px;
+			transition: all .2s;
+		}
+
+
+		.ng-leave-active {
+			left: 9999px;
+			transition: all .2s;
+		}
+
+@media screen and (max-width: 1200px) {
+    li {
+      border-radius: 0px;
+      width: 100%;
+    }
+    
+    li.ng-scope {
+      border-radius: 0px;
+    }
+}
+	</style>
+</head>
+<body>
+<main class="container">
+  <div id="logo">
+    <h1><img class="twitch_logo" src="http://s.jtvnw.net/jtv_user_pictures/hosted_images/Twitch_BlackLogoURL.png"><small>Twitchtv</small> JSON API</h1>
+  </div>
+  
+  
+	<div id="usersList" ng-controller="UserController as userCtrl">
+		<form class="form-horizontal" id="userSearchForm">
+			<div class="form-group">
+				<div class="input-group">
+		        	<span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+		        	<input type="text" class="form-control" ng-model="searchUser" id="userQuery" placeholder="Find a user">
+      			</div>
+			</div>
+		</form>
+
+		<ul>
+			<li ng-animate="'animate'" ng-repeat="user in userCtrl.users | filter:searchUser" ng-class="{ online: user.stream !== null && !user.error }">
+				<a ng-href="{{user.channels.url}}" target="_blank">
+					<img ng-src="{{user.channels.logo}}">
+					<img src="https://www.ellerines.co.za/media/img/productimage-picture-default.jpg" ng-show="user.channels.logo === null || user.error">
+					<p ng-class="{ offline : user.stream === null }">{{user.name}}</p>
+					<small ng-show="{{user.stream !== null}}">{{user.channels.status}}</small>
+					<small ng-show="{{user.error === 'Unprocessable Entity'}}">{{"User Has Closed their Twitch Account"}}</small>
+				</a>
+			</li>
+		</ul>
+		
+	</div>
+
+</main>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-animate.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="js/app.js"></script>
+</body>
+<!-- partial -->
+  <script  src="./script.js"></script>
+
+</body>
+</html>
